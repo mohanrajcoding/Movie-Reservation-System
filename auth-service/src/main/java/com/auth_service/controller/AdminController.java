@@ -25,7 +25,7 @@ public class AdminController {
 		@PreAuthorize("hasRole('ADMIN')")
 		@PostMapping("/register")
 		public ResponseEntity<Map<String, String>> adminRegister (@RequestBody SignupRequest request){
-			authService.register(request);
+			authService.adminRegister(request);
 			return ResponseEntity.ok(Collections.singletonMap("message", "User registered successfully"));
 		}
 }

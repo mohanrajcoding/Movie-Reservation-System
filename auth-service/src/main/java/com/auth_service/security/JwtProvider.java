@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
-import javax.crypto.SecretKey;
-
 import com.auth_service.enums.Role;
 
 @Component
@@ -24,7 +22,7 @@ public class JwtProvider {
     private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
     public String generateToken(String email, Role role) {
-    	Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    	//Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role.name())

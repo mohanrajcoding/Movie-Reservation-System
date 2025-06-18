@@ -26,6 +26,9 @@ public class AuthService {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new AuthServiceException("Email already exists");
         }
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+			throw new AuthServiceException("Username already exists");
+		}
 
         User user = new User();
         user.setUsername(request.getUsername());
@@ -52,6 +55,9 @@ public class AuthService {
 		if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new AuthServiceException("Email already exists");
         }
+		if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+			throw new AuthServiceException("Username already exists");
+		}
 
         User user = new User();
         user.setUsername(request.getUsername());

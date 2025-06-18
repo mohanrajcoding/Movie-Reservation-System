@@ -19,7 +19,6 @@ import com.auth_service.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
@@ -37,14 +36,5 @@ public class AuthController {
 	public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request){
 		AuthResponse response = authService.login(request);
 		return ResponseEntity.ok(response);
-	}
-	
-	// 👇 Admin Registration - Accessible only to ROLE_ADMIN 
-	//MethodSecurityConfig.class need to add in Config  
-	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/admin-register")
-	public ResponseEntity<Map<String, String>> adminRegister (@RequestBody SignupRequest request){
-		authService.register(request);
-		return ResponseEntity.ok(Collections.singletonMap("message", "User registered successfully"));
 	}
 }
