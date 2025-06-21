@@ -3,10 +3,7 @@ package com.auth_service.controller;
 import java.util.Collections;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +20,8 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-	@Autowired
-	private AuthService authService;
+	
+	private final AuthService authService;
 	
 	@PostMapping("/register")
 	public ResponseEntity<Map<String, String>> register (@RequestBody SignupRequest request){
