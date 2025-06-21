@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public class Movie {
 	@Column(nullable = false, unique = true)
 	private String title;         // for display: "Avengers"
 	private String normalizedTitle; // for validation/search: "avengers"
-//	@Column(nullable = false)
+	@Column(nullable = false)
 	private String description;
 	@Column(nullable = false)
 	private String posterUrl;

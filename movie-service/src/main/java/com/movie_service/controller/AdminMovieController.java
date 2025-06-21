@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ public class AdminMovieController {
 
 	private final MovieSerive movieSerive;
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/add-movies")
 	public ResponseEntity <Map<String,String>> addMovie(@RequestBody Movie movie){
 		Movie addMovie = movieSerive.addMovie(movie);
