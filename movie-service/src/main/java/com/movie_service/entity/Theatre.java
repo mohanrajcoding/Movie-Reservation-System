@@ -21,12 +21,11 @@ import lombok.NoArgsConstructor;
 public class Theatre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
 
-    private String location;
-    private String screenName; 
+    private String location; 
 }
 

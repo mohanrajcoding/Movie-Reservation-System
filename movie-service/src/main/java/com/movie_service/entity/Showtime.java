@@ -26,7 +26,7 @@ public class Showtime {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	@NotNull
 	private LocalDateTime startTime;
 	@Min(0)
@@ -44,4 +44,5 @@ public class Showtime {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "theatre_id", nullable = false)
 	private Theatre theatre;
+	private String screenName;
 }

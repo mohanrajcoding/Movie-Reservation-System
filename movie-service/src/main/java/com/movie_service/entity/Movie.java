@@ -21,9 +21,10 @@ import lombok.NoArgsConstructor;
 public class Movie {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	@Column(nullable = false, unique = true)
 	private String title;         // for display: "Avengers"
+	@Column(nullable = false)
 	private String normalizedTitle; // for validation/search: "avengers"
 	@Column(nullable = false)
 	private String description;

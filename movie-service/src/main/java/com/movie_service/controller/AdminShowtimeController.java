@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.movie_service.dto.ShowtimeRequestDTO;
 import com.movie_service.entity.Showtime;
 import com.movie_service.service.ShowtimeService;
 
@@ -27,21 +28,21 @@ public class AdminShowtimeController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/add-showtime")
-	public ResponseEntity <Showtime> addShowtime(@RequestBody Showtime showtime){
-		Showtime addShowtime = showtimeService.addShowtime(showtime);
-		return ResponseEntity.ok(addShowtime);
+	public ResponseEntity<Map<String, String>> addShowtime(@RequestBody ShowtimeRequestDTO showtimeDto){
+		showtimeService.addShowtime(showtimeDto);
+		return ResponseEntity.ok(Collections.singletonMap("message", "Showtime added Successfully"));
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/update-showtime")
-	public ResponseEntity<Showtime> updateShowtime(@RequestBody Showtime showtime){
-		Showtime updateShowtime = showtimeService.updateShowtime(showtime);
-		return ResponseEntity.ok(updateShowtime);
+	public ResponseEntity<Map<String,String>> updateShowtime(@RequestBody ShowtimeRequestDTO showtime){
+		showtimeService.updateShowtime(showtime);
+		return ResponseEntity.ok(Collections.singletonMap("message", "Showtime updated Successfully"));
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/delete-showtime/{id}")
-	public ResponseEntity<?> deleteShowtime(@PathVariable Long id){
+	public ResponseEntity<?> deleteShowtime(@PathVariable Integer id){
 		showtimeService.deleteshowtime(id);
 		return ResponseEntity.ok(Collections.singletonMap("message", "Showtime details deleted successfully"));
 	}

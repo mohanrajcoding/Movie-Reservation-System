@@ -67,7 +67,7 @@ public class MovieServiceImpl implements MovieService{
 	}
 	
 	@Override
-	public void deleteMovie(Long id) {
+	public void deleteMovie(Integer id) {
 		movieRepository.findById(id).orElseThrow(()->new MovieServiceException("There is no Record for id: "+id));
 		movieRepository.deleteById(id);
 	}

@@ -13,13 +13,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShowtimeDTO {
+public class ShowtimeResponseDTO {
 	
-	private Long Id;
+	private Integer Id;
 	private List<Movie> movie;
 	private List<Theatre> theatre;
 	private LocalDateTime startTime;
 	private Integer totalSeats;
 	private Integer availableSeats;
+	private String screenName;
 
 }
