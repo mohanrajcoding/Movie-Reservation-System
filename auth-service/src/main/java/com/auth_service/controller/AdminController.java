@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,9 +27,25 @@ public class AdminController {
 	// 👇 Admin Registration - Accessible only to ROLE_ADMIN 
 		//MethodSecurityConfig.class need to add in Config  
 		@PreAuthorize("hasRole('ADMIN')")
-		@PostMapping("/register")
+		@PostMapping("/admin-register")
 		public ResponseEntity<Map<String, String>> adminRegister (@RequestBody SignupRequest request){
 			authService.adminRegister(request);
 			return ResponseEntity.ok(Collections.singletonMap("message", "User registered successfully"));
 		}
+		
+		@PreAuthorize("hasRole('ADMIN')")
+		@PutMapping("/modify-users")
+		public ResponseEntity<Map<String, String>> modifyUser (@RequestBody SignupRequest request){
+			authService.modifyUser(request);
+			return ResponseEntity.ok(Collections.singletonMap("message", "User modified successfully"));
+		}
+		
+		@PreAuthorize("hasRole('ADMIN')")
+		@DeleteMapping("/delete-users")
+		public ResponseEntity<Map<String, String>> deleteUsers (@RequestBody SignupRequest request){
+			authService.deleteUsers(request);
+			return ResponseEntity.ok(Collections.singletonMap("message", "User deleted successfully"));
+		}
+		
+		
 }
