@@ -2,7 +2,9 @@ package com.movie_service.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,7 +34,14 @@ public class Showtime {
 	@Min(0)
 	private Integer availableSeats;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "movie_id", nullable = false)
 	private Movie movie;
+	private LocalDateTime createdAt;
+
+	private LocalDateTime updatedAt;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "theatre_id", nullable = false)
+	private Theatre theatre;
 }

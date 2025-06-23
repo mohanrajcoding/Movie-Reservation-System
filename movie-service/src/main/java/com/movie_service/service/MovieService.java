@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.movie_service.entity.Movie;
 
-public interface MovieSerive {
+public interface MovieService {
 	Movie addMovie(Movie movie);
 	List<Movie> getAllMovies();
 	List<Movie> getMoviesByDate(LocalDate date);

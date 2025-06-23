@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.movie_service.entity.Movie;
-import com.movie_service.service.MovieSerive;
+import com.movie_service.service.MovieService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/admin/movies")
 public class AdminMovieController {
 
-	private final MovieSerive movieSerive;
+	private final MovieService movieSerive;
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/add-movies")
@@ -32,13 +32,15 @@ public class AdminMovieController {
 		return ResponseEntity.ok(Collections.singletonMap("message", addMovie.getTitle()+" movie added Successfully"));
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/update-movie")
 	public ResponseEntity <Movie> updateMovie(@RequestBody Movie movie){
 		Movie updatedMovie = movieSerive.updateMovie(movie);
 		return ResponseEntity.ok(updatedMovie);
 	}
 	
-	@DeleteMapping("/deletemovie/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping("/delete-movie/{id}")
 	public ResponseEntity<?> deleteMovie(@PathVariable Long id){
 		movieSerive.deleteMovie(id);
 		return ResponseEntity.ok(Collections.singletonMap("message", "Movie details deleted successfully"));

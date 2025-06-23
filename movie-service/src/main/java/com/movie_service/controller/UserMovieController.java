@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.movie_service.entity.Movie;
-import com.movie_service.service.MovieSerive;
+import com.movie_service.service.MovieService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/movies")
 public class UserMovieController {
 
-	private final MovieSerive movieSerive;
+	private final MovieService movieSerive;
 	
 	@GetMapping
 	public ResponseEntity <List<Movie>> getMovies(@RequestParam (required = false) 

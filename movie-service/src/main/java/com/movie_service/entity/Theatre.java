@@ -14,22 +14,19 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name="movie")
+@Table(name = "theatre")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Movie {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Column(nullable = false, unique = true)
-	private String title;         // for display: "Avengers"
-	private String normalizedTitle; // for validation/search: "avengers"
-	@Column(nullable = false)
-	private String description;
-	@Column(nullable = false)
-	private String posterUrl;
-	@Column(nullable = false)
-	private String genre;
+public class Theatre {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column(nullable = false)
+    private String name;
+
+    private String location;
+    private String screenName; 
 }
+

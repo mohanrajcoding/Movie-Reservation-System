@@ -4,7 +4,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.movie_service.entity.Showtime;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Repository
 public interface ShowtimeRepository extends JpaRepository<Showtime, Long>{
 
+	List<Showtime> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
+	List<Showtime> findByStartTimeAfter(LocalDateTime start);
+	List<Showtime> findByMovie_Id(Long movieId);
+	boolean existsByMovie_IdAndStartTime(Long movieId, LocalDateTime startstartTime);
+	boolean existsById(Long movieId);
 }

@@ -9,15 +9,12 @@ import org.springframework.stereotype.Service;
 import com.movie_service.entity.Movie;
 import com.movie_service.repository.MovieRepository;
 import com.movie_service.repository.ShowtimeRepository;
-import com.movie_service.exception.movie.InvalidInputException;
-import com.movie_service.exception.movie.MovieAlreadyExistsException;
-import com.movie_service.exception.movie.MovieNotFoundException;
-
+import com.movie_service.exception.MovieServiceException;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MovieServiceImpl implements MovieSerive{
+public class MovieServiceImpl implements MovieService{
 
 	private final MovieRepository movieRepository;
 	private final ShowtimeRepository showtimeRepository;
@@ -26,11 +23,11 @@ public class MovieServiceImpl implements MovieSerive{
 	public Movie addMovie(Movie movie) {
 		// TODO Auto-generated method stub
 		if(movie.getTitle().isEmpty() || movie.getTitle()==null) {
-			throw new InvalidInputException("Please pass valide Title");
+			throw new MovieServiceException("Please pass valide Title");
 		}
 		List<Movie> isExist = movieRepository.findByNormalizedTitle(movie.getTitle().trim().toLowerCase());
 		if(!isExist.isEmpty()) {
-			throw new MovieAlreadyExistsException(movie.getTitle()+ " movie already exist");
+			throw new MovieServiceException(movie.getTitle()+ " movie already exist");
 		}
 		String rawTitle = movie.getTitle();
 		movie.setNormalizedTitle(rawTitle.trim().toLowerCase());
@@ -51,7 +48,7 @@ public class MovieServiceImpl implements MovieSerive{
 		.map(showtime -> showtime.getMovie())
 		.distinct().collect(Collectors.toList());
 		if(movies.isEmpty()) {
-			throw new MovieNotFoundException("Movies not available on: "+ date.toString());
+			throw new MovieServiceException("Movies not available on: "+ date.toString());
 		}
 		return movies;
 	}
@@ -60,7 +57,7 @@ public class MovieServiceImpl implements MovieSerive{
 	public Movie updateMovie(Movie movie) {
 		// TODO Auto-generated method stub
 		Movie existingmovie = movieRepository.findById(movie.getId()).orElseThrow(
-					()->new MovieNotFoundException ("Movie is not available for Updating"));
+					()->new MovieServiceException ("Movie is not available for Updating"));
 		
 		existingmovie.setDescription(movie.getDescription());
 		existingmovie.setGenre(movie.getGenre());
@@ -71,7 +68,7 @@ public class MovieServiceImpl implements MovieSerive{
 	
 	@Override
 	public void deleteMovie(Long id) {
-		movieRepository.findById(id).orElseThrow(()->new MovieNotFoundException("There is no Record for id: "+id));
+		movieRepository.findById(id).orElseThrow(()->new MovieServiceException("There is no Record for id: "+id));
 		movieRepository.deleteById(id);
 	}
 	
