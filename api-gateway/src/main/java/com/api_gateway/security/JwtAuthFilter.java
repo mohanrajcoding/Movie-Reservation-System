@@ -44,10 +44,6 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 
 	    return chain.filter(exchange);
 	}
-	@PostConstruct
-	public void init() {
-	    System.out.println("✅ JwtAuthFilter bean initialized");
-	}
 
 
 }
