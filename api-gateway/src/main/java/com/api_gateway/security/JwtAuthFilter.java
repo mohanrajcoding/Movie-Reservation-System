@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -24,7 +23,6 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 	    String path = exchange.getRequest().getURI().getPath();
-	    System.out.println("JwtAuthFilter triggered. Path: " + path);
 
 	    if (path.startsWith("/api/auth")) {
 	        return chain.filter(exchange);
@@ -44,6 +42,4 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 
 	    return chain.filter(exchange);
 	}
-
-
 }

@@ -10,7 +10,7 @@ public class GatewaySecurityConfig {
 	
 	@Bean	
 	public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-		return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
+		return http.csrf(csrf -> csrf.disable())
 				.authorizeExchange(ex->ex.anyExchange().permitAll())
 				.build();
 	}
