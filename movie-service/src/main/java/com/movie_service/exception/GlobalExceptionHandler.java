@@ -28,4 +28,9 @@ public class GlobalExceptionHandler {
 	 public ResponseEntity<?> handleShowtimeServiceException(ShowtimeServiceException ex){
 		 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("errorMessage", ex.getMessage()));
 	 }
+	 
+	 @ExceptionHandler(TheatreServiceException.class)
+	 public ResponseEntity<?> TheatreServiceException(ShowtimeServiceException ex){
+		 return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("errorMessage", ex.getMessage()));
+	 }
 }
