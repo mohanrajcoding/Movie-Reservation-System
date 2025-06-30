@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service-container
+    ports:
+      - "8081:8080"
+    networks:
+      - movie-network
+
+  movie-service:
+    build: ./movie-service
+    container_name: movie-service-container
+    ports:
+      - "8082:8080"
+    networks:
+      - movie-network
+
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server-container
+    ports:
+      - "8761:8080"
+    networks:
+      - movie-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway-container
+    ports:
+      - "8083:8080"
+    networks:
+      - movie-network
+
+networks:
+  movie-network:
+    driver: bridge
+
