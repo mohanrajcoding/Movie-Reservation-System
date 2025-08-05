@@ -19,6 +19,10 @@ public class TheatreServiceImpl implements TheatreService{
 	@Override
 	public void addTheatre(Theatre theatre) {
 		// TODO Auto-generated method stub
+		if(theatre.getLocation()==null) 
+			throw new TheatreServiceException("Please enter the Location");
+		if(theatre.getName()==null)
+			throw new TheatreServiceException("Please enter the Theatre Name");
 		List<Theatre> existingTheatre = theatreRepository.findByName(theatre.getName());
 		boolean theatreExists = existingTheatre.stream().anyMatch(theatres->theatres.getName().equalsIgnoreCase(theatre.getName())&& 
 				theatres.getLocation().equalsIgnoreCase(theatre.getLocation()));
@@ -30,21 +34,24 @@ public class TheatreServiceImpl implements TheatreService{
 	}
 
 	@Override
-	public void updateTheatre(Theatre theatre) {
+	public void updateTheatreById(Theatre theatre) {
 		// TODO Auto-generated method stub
-		
+		Theatre existingTheatre = theatreRepository.findById(theatre.getId()).orElseThrow(()-> new TheatreServiceException("Theatre not available for update..!"));
+		existingTheatre.setLocation(theatre.getLocation());
+		existingTheatre.setName(theatre.getName());
+		theatreRepository.save(existingTheatre);
 	}
 
 	@Override
 	public Theatre getTheatreById(Integer id) {
 		// TODO Auto-generated method stub
-		return null;
+		return theatreRepository.findById(id).orElseThrow(()-> new TheatreServiceException("Theatre not available for given Id..!"));
 	}
 
 	@Override
 	public List<Theatre> getTheatres() {
 		// TODO Auto-generated method stub
-		return null;
+		return theatreRepository.findAll();
 	}
 
 }

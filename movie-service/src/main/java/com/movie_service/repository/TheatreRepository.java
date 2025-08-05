@@ -10,4 +10,6 @@ public interface TheatreRepository extends JpaRepository<Theatre, Integer> {
 
 	List<Theatre> findByName(String name);
 	boolean existsByName(String name);
+	Theatre findByNameAndLocation(String name, String location);
+	List<Theatre> findByNameAndLocationIgnoreCase(String name, String location);
 }

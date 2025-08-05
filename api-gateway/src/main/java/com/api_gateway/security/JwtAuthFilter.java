@@ -1,5 +1,7 @@
 package com.api_gateway.security;
 
+import java.util.List;
+
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -14,6 +16,11 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class JwtAuthFilter implements GlobalFilter, Ordered {
 	private final JwtService jwtService;
+	private final List <String> PUBLIC_PATHS = List.of("/api/auth",
+	        										"/api/movies"
+	        				// Add more public paths here in future
+												);
+	
 	@Override
 	public int getOrder() {
 		// TODO Auto-generated method stub
@@ -23,8 +30,10 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 	    String path = exchange.getRequest().getURI().getPath();
+	    
+	    boolean isPublic = PUBLIC_PATHS.stream().anyMatch(path::startsWith);
 
-	    if (path.startsWith("/api/auth")) {
+	    if (isPublic) {
 	        return chain.filter(exchange);
 	    }
 

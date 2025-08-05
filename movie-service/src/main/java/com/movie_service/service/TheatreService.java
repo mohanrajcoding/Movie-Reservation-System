@@ -7,9 +7,8 @@ import com.movie_service.entity.Theatre;
 public interface TheatreService {
 
 	void addTheatre(Theatre theatre);
-	void updateTheatre(Theatre theatre);
+	void updateTheatreById(Theatre theatre);
 	Theatre getTheatreById(Integer id);
 	List<Theatre> getTheatres();
-	
 
 }

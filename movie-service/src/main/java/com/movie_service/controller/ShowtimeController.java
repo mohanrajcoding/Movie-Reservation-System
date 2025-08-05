@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/showtimes")
+@RequestMapping("api/movies/showtimes")
 public class ShowtimeController {
 	
 	private final ShowtimeService showtimeService;
