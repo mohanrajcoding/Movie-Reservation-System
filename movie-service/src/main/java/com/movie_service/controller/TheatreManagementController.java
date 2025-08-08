@@ -3,6 +3,7 @@ package com.movie_service.controller;
 import java.util.Collections;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,18 +19,20 @@ import com.movie_service.service.TheatreService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/admin/theater")
+@RequestMapping("/api/movies/admin/theater")
 @RequiredArgsConstructor
 public class TheatreManagementController {
 	
 	private final TheatreService theatreService;
-
+	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/addTheatre")
 	public ResponseEntity<?> addTheatre(@RequestBody Theatre theatre) {
 		theatreService.addTheatre(theatre);
 		return ResponseEntity.ok(Collections.singletonMap("message", "Theatre was added Successfully"));
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/updateTheatre")
 	public ResponseEntity<?> modifyTheatre(@RequestBody Theatre theatre){
 		theatreService.updateTheatreById(theatre);

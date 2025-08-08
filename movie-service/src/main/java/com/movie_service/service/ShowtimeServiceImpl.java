@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.movie_service.dto.ShowtimeRequestDTO;
@@ -29,6 +31,7 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 	private final TheatreRepository theatreRepository;
 
 	@Override
+	@CacheEvict(value = "showtimes", allEntries = true)
 	public void addShowtime(ShowtimeRequestDTO showtimeDto) {
 		// TODO Auto-generated method stub
 		boolean exists = showtimeRepository.existsByMovie_IdAndStartTime
@@ -52,8 +55,10 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 	}
 
 	@Override
+	@Cacheable(value ="showtimes" ,key="'fromnow'")
 	public List<ShowtimeResponseDTO> getShowtimesFromNow() {
 		// TODO Auto-generated method stub
+		 System.out.println("Loading showtimes from DB");
 		LocalDateTime start= LocalDateTime.now();
 		List<Showtime> showtimes = showtimeRepository.findByStartTimeAfter(start);
 		List<ShowtimeResponseDTO> showtimeDto = showtimes.stream().map(showtime ->{
@@ -71,14 +76,17 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 	}
 
 	@Override
+	@Cacheable(value ="showtimes" ,key="'bymovie'")
 	public List<Showtime> getShowtimesByMovie(Integer movieId) {
 		// TODO Auto-generated method stub
 		return showtimeRepository.findByMovie_Id(movieId);
 	}
 
 	@Override
+	@Cacheable(value ="showtimes" ,key="#date.toString()")
 	public List<ShowtimeResponseDTO> getShowtimesByDate(LocalDate date) {
 		// TODO Auto-generated method stub
+		System.out.println("Load from DB"+date);
 		LocalDateTime start;
 		if(date.isEqual(LocalDate.now())) {
 			start = LocalDateTime.now();
@@ -105,9 +113,10 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 	}
 
 	@Override
-	public  void updateShowtime(ShowtimeRequestDTO showtimeDto) {
+	@CacheEvict(value = "showtimes", allEntries = true)
+	public  void updateShowtime(Integer id, ShowtimeRequestDTO showtimeDto) {
 		// TODO Auto-generated method stub
-		Showtime updateShowtime = showtimeRepository.findById(showtimeDto.getId()).orElseThrow(
+		Showtime updateShowtime = showtimeRepository.findById(id).orElseThrow(
 					()->new ShowtimeServiceException("Showtime not exists for given ID"));
 		if(showtimeDto.getAvailableSeats()!=null) {			
 			updateShowtime.setAvailableSeats(showtimeDto.getAvailableSeats());
@@ -117,6 +126,7 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 					()->new ShowtimeServiceException("Please enter valid Movie ID"));
 			updateShowtime.setMovie(movie);			
 		}
+		//System.out.println(showtimeDto.getStartTime());
 		if(showtimeDto.getStartTime()!=null) {
 			updateShowtime.setStartTime(showtimeDto.getStartTime());			
 		}
@@ -133,6 +143,7 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 	}
 
 	@Override
+	@CacheEvict(value = "showtimes", allEntries = true)
 	public void deleteshowtime(Integer id) {
 		// TODO Auto-generated method stub
 		showtimeRepository.findById(id).orElseThrow(()->new ShowtimeServiceException("Show time not available for delete"));

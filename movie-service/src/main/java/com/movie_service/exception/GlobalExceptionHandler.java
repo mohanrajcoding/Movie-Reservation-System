@@ -20,8 +20,9 @@ public class GlobalExceptionHandler {
 	
 	 @ExceptionHandler(Exception.class)
 	public ResponseEntity<Map<String, String>> handleGlobalException(Exception ex) {
+		 ex.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(Collections.singletonMap("errorMessage", "An unexpected error occurred."));
+	                .body(Collections.singletonMap("errorMessage", "An unexpected error occurred."+ex.getStackTrace()));
 	    }
 	 
 	 @ExceptionHandler(ShowtimeServiceException.class)

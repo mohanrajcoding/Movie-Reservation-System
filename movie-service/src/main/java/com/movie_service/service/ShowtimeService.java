@@ -12,7 +12,7 @@ public interface ShowtimeService {
 	List<Showtime> getShowtimesByMovie(Integer movieId);
 	List<ShowtimeResponseDTO> getShowtimesByDate(LocalDate date);
 	List<ShowtimeResponseDTO> getShowtimesFromNow();
-	void updateShowtime(ShowtimeRequestDTO showtime);
 	void deleteshowtime(Integer id);
+	void updateShowtime(Integer id, ShowtimeRequestDTO showtimeRequestDTO);
 	
 }

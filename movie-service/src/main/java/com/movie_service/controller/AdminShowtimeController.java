@@ -21,27 +21,28 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/showtime")
+@RequestMapping("/api/movies/admin/showtime")
 public class AdminShowtimeController {
 	
 	private final ShowtimeService showtimeService;
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/add-showtime")
+	@PostMapping("/addshowtime")
 	public ResponseEntity<Map<String, String>> addShowtime(@RequestBody ShowtimeRequestDTO showtimeDto){
 		showtimeService.addShowtime(showtimeDto);
 		return ResponseEntity.ok(Collections.singletonMap("message", "Showtime added Successfully"));
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update-showtime")
-	public ResponseEntity<Map<String,String>> updateShowtime(@RequestBody ShowtimeRequestDTO showtime){
-		showtimeService.updateShowtime(showtime);
+	@PutMapping("/{id}")
+	public ResponseEntity<Map<String,String>> updateShowtime(@PathVariable Integer id, 
+													@RequestBody ShowtimeRequestDTO showtimeRequestDTO){
+		showtimeService.updateShowtime(id,showtimeRequestDTO);
 		return ResponseEntity.ok(Collections.singletonMap("message", "Showtime updated Successfully"));
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete-showtime/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteShowtime(@PathVariable Integer id){
 		showtimeService.deleteshowtime(id);
 		return ResponseEntity.ok(Collections.singletonMap("message", "Showtime details deleted successfully"));

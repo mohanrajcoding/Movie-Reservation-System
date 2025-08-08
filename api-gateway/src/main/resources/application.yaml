@@ -9,8 +9,8 @@ spring:
           routes:
             - id: movie-service
               uri: http://localhost:8082
-              predicates:
-                - Path=/api/movies/**
+              predicates: 
+                - Path=/api/movies/** 
             - id: auth-service
               uri: http://localhost:8081
               predicates:

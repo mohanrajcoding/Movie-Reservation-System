@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/movies")
+@RequestMapping("/api/movies/admin/movies")
 public class AdminMovieController {
 
 	private final MovieService movieSerive;
