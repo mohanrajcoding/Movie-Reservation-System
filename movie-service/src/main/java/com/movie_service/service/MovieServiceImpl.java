@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.movie_service.entity.Movie;
@@ -20,6 +22,7 @@ public class MovieServiceImpl implements MovieService{
 	private final ShowtimeRepository showtimeRepository;
 	
 	@Override
+	@CacheEvict(key = "movies", allEntries = true)
 	public Movie addMovie(Movie movie) {
 		// TODO Auto-generated method stub
 		if(movie.getTitle().isEmpty() || movie.getTitle()==null) {
@@ -35,12 +38,14 @@ public class MovieServiceImpl implements MovieService{
 	}
 
 	@Override
+	@Cacheable(key = "movies", value = "all")
 	public List<Movie> getAllMovies() {
 		// TODO Auto-generated method stub
 		return movieRepository.findAll();
 	}
 
 	@Override
+	@Cacheable(key = "movies", value = "bydate")
 	public List<Movie> getMoviesByDate(LocalDate date) {
 		// TODO Auto-generated method stub
 		List <Movie> movies = showtimeRepository.findAll().stream()
@@ -54,6 +59,7 @@ public class MovieServiceImpl implements MovieService{
 	}
 
 	@Override
+	@CacheEvict(key = "movies", allEntries = true)
 	public Movie updateMovie(Movie movie) {
 		// TODO Auto-generated method stub
 		Movie existingmovie = movieRepository.findById(movie.getId()).orElseThrow(
@@ -67,6 +73,7 @@ public class MovieServiceImpl implements MovieService{
 	}
 	
 	@Override
+	@CacheEvict(key = "movies", allEntries = true)
 	public void deleteMovie(Integer id) {
 		movieRepository.findById(id).orElseThrow(()->new MovieServiceException("There is no Record for id: "+id));
 		movieRepository.deleteById(id);

@@ -2,6 +2,8 @@ package com.movie_service.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.movie_service.entity.Theatre;
@@ -17,6 +19,7 @@ public class TheatreServiceImpl implements TheatreService{
 	public final TheatreRepository theatreRepository;
 	
 	@Override
+	@CacheEvict(key = "theatre", allEntries = true)
 	public void addTheatre(Theatre theatre) {
 		// TODO Auto-generated method stub
 		if(theatre.getLocation()==null) 
@@ -34,6 +37,7 @@ public class TheatreServiceImpl implements TheatreService{
 	}
 
 	@Override
+	@CacheEvict(key = "theatre", allEntries = true)
 	public void updateTheatreById(Theatre theatre) {
 		// TODO Auto-generated method stub
 		Theatre existingTheatre = theatreRepository.findById(theatre.getId()).orElseThrow(()-> new TheatreServiceException("Theatre not available for update..!"));
@@ -43,12 +47,14 @@ public class TheatreServiceImpl implements TheatreService{
 	}
 
 	@Override
+	@Cacheable(key = "theatre", value = "byid")
 	public Theatre getTheatreById(Integer id) {
 		// TODO Auto-generated method stub
 		return theatreRepository.findById(id).orElseThrow(()-> new TheatreServiceException("Theatre not available for given Id..!"));
 	}
 
 	@Override
+	@Cacheable(key = "theatre", value = "all")
 	public List<Theatre> getTheatres() {
 		// TODO Auto-generated method stub
 		return theatreRepository.findAll();
