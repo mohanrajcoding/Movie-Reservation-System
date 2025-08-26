@@ -2,7 +2,9 @@ package com.movie_service.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -12,14 +14,18 @@ import org.springframework.stereotype.Service;
 import com.movie_service.dto.ShowtimeRequestDTO;
 import com.movie_service.dto.ShowtimeResponseDTO;
 import com.movie_service.entity.Movie;
+import com.movie_service.entity.Seat;
+import com.movie_service.entity.SeatStatus;
 import com.movie_service.entity.Showtime;
 import com.movie_service.entity.Theatre;
 import com.movie_service.exception.MovieServiceException;
 import com.movie_service.exception.ShowtimeServiceException;
 import com.movie_service.repository.MovieRepository;
+import com.movie_service.repository.SeatRepository;
 import com.movie_service.repository.ShowtimeRepository;
 import com.movie_service.repository.TheatreRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,6 +35,7 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 	private final ShowtimeRepository showtimeRepository;
 	private final MovieRepository movieRepository;
 	private final TheatreRepository theatreRepository;
+	private final SeatRepository seatRepository;
 
 	@Override
 	@CacheEvict(value = "showtimes", allEntries = true)
@@ -51,6 +58,16 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 		showtime.setScreenName(showtimeDto.getScreenName());
 		showtime.setTotalSeats(showtimeDto.getTotalSeats());
 		showtime.setStartTime(showtimeDto.getStartTime());
+		 for (int row = 1; row <= 5; row++) {
+	            for (int col = 1; col <= 10; col++) {
+	                String seatNumber = (char)('A' + row - 1) + String.valueOf(col); // A1..A10, B1..B10
+	                Seat seat = new Seat();
+	                seat.setSeatNumber(seatNumber);
+	                seat.setAvailable(true);
+	                seat.setShowtime(showtime);
+	                showtime.getSeats().add(seat);
+	            }
+	        }
 		showtimeRepository.save(showtime);
 	}
 
@@ -77,7 +94,7 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 
 	@Override
 	@Cacheable(value ="showtimes" ,key="'bymovie'")
-	public List<Showtime> getShowtimesByMovie(Integer movieId) {
+	public List<Showtime> getShowtimesByMovie(Long movieId) {
 		// TODO Auto-generated method stub
 		return showtimeRepository.findByMovie_Id(movieId);
 	}
@@ -114,7 +131,7 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 
 	@Override
 	@CacheEvict(value = "showtimes", allEntries = true)
-	public  void updateShowtime(Integer id, ShowtimeRequestDTO showtimeDto) {
+	public  void updateShowtime(Long id, ShowtimeRequestDTO showtimeDto) {
 		// TODO Auto-generated method stub
 		Showtime updateShowtime = showtimeRepository.findById(id).orElseThrow(
 					()->new ShowtimeServiceException("Showtime not exists for given ID"));
@@ -144,11 +161,41 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 
 	@Override
 	@CacheEvict(value = "showtimes", allEntries = true)
-	public void deleteshowtime(Integer id) {
+	public void deleteshowtime(Long id) {
 		// TODO Auto-generated method stub
 		showtimeRepository.findById(id).orElseThrow(()->new ShowtimeServiceException("Show time not available for delete"));
 		showtimeRepository.deleteById(id);
 		
 	}
 
+	@Override
+	public Map<String, Boolean> checkSeatsAvailability(Long showtimeId, List<String> seatIds) {
+		// TODO Auto-generated method stub
+		Showtime showtime = showtimeRepository.findById(showtimeId)
+		        .orElseThrow(() -> new RuntimeException("Showtime not found"));
+
+		    Map<String, Boolean> availability = new HashMap<>();
+		    for (String seatId : seatIds) {
+		        Seat seat = showtime.getSeats().stream()
+		                .filter(s -> s.getSeatNumber().equals(seatId))
+		                .findFirst()
+		                .orElseThrow(() -> new RuntimeException("Seat not found: " + seatId));
+		        availability.put(seatId, seat.isAvailable());
+		        seat.setStatus(SeatStatus.HELD);
+		    }
+		    return availability;
+	}
+	@Transactional
+	public void markSeatsAsBooked(Long showtimeId, List<String> seatIds) {
+		List<Seat> seats = seatRepository.findByShowtimeIdAndSeatNumberIn(showtimeId, seatIds);
+
+        for (Seat seat : seats) {
+            if (seat.getStatus() == SeatStatus.BOOKED) {
+                throw new IllegalStateException("Seat already booked: " + seat.getSeatNumber());
+            }
+            seat.setStatus(SeatStatus.BOOKED);
+        }
+
+        seatRepository.saveAll(seats);
+	}
 }

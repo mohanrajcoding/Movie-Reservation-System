@@ -17,11 +17,15 @@ public class JwtService {
 	}
 	
 	public boolean isTokenValid(String token) {
+		System.out.println("Inside validate");
 		try {
+			System.out.println("before extract");
 			extractAllClaims(token);
+			System.out.println("after extract");
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 			return false;
 		}
 	}

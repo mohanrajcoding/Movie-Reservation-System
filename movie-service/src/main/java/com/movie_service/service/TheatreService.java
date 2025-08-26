@@ -8,7 +8,7 @@ public interface TheatreService {
 
 	void addTheatre(Theatre theatre);
 	void updateTheatreById(Theatre theatre);
-	Theatre getTheatreById(Integer id);
+	Theatre getTheatreById(Long id);
 	List<Theatre> getTheatres();
 
 }

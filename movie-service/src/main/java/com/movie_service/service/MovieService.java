@@ -10,5 +10,5 @@ public interface MovieService {
 	List<Movie> getAllMovies();
 	List<Movie> getMoviesByDate(LocalDate date);
 	Movie updateMovie(Movie movie);
-	void deleteMovie(Integer id);
+	void deleteMovie(Long id);
 }

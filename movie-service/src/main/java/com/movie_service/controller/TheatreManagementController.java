@@ -40,7 +40,7 @@ public class TheatreManagementController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<?> getTheatre(@RequestParam (required = false) Integer id){
+	public ResponseEntity<?> getTheatre(@RequestParam (required = false) Long id){
 		if(id==null) {
 			return ResponseEntity.ok(theatreService.getTheatres());
 		}

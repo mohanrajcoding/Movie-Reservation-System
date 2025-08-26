@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.movie_service.entity.Movie;
 @Repository
-public interface MovieRepository extends JpaRepository<Movie, Integer>{
+public interface MovieRepository extends JpaRepository<Movie, Long>{
 
 	List<Movie> findByNormalizedTitle(String normalizedTitle);
 }

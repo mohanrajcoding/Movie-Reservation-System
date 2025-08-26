@@ -35,7 +35,7 @@ public class AdminShowtimeController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
-	public ResponseEntity<Map<String,String>> updateShowtime(@PathVariable Integer id, 
+	public ResponseEntity<Map<String,String>> updateShowtime(@PathVariable Long id, 
 													@RequestBody ShowtimeRequestDTO showtimeRequestDTO){
 		showtimeService.updateShowtime(id,showtimeRequestDTO);
 		return ResponseEntity.ok(Collections.singletonMap("message", "Showtime updated Successfully"));
@@ -43,7 +43,7 @@ public class AdminShowtimeController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteShowtime(@PathVariable Integer id){
+	public ResponseEntity<?> deleteShowtime(@PathVariable Long id){
 		showtimeService.deleteshowtime(id);
 		return ResponseEntity.ok(Collections.singletonMap("message", "Showtime details deleted successfully"));
 	}

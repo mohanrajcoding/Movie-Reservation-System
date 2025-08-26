@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ShowtimeRequestDTO {
 	
-	private Integer id;
+	private Long id;
 	private LocalDateTime startTime;
 	private Integer totalSeats;
 	private Integer availableSeats;
-	private Integer movieId;
-	private Integer theatreId;
+	private Long movieId;
+	private Long theatreId;	
 	private String screenName;
 	
 }

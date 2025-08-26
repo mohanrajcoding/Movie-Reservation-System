@@ -2,6 +2,14 @@ version: '3.8'
 
 services:
 
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server-container
+    ports:
+      - "8761:8080"
+    networks:
+      - movie-network
+
   auth-service:
     build: ./auth-service
     container_name: auth-service-container
@@ -15,14 +23,6 @@ services:
     container_name: movie-service-container
     ports:
       - "8082:8080"
-    networks:
-      - movie-network
-
-  eureka-server:
-    build: ./eureka-server
-    container_name: eureka-server-container
-    ports:
-      - "8761:8080"
     networks:
       - movie-network
 

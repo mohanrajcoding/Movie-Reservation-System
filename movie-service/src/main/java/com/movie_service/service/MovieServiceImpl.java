@@ -74,7 +74,7 @@ public class MovieServiceImpl implements MovieService{
 	
 	@Override
 	@CacheEvict(key = "movies", allEntries = true)
-	public void deleteMovie(Integer id) {
+	public void deleteMovie(Long id) {
 		movieRepository.findById(id).orElseThrow(()->new MovieServiceException("There is no Record for id: "+id));
 		movieRepository.deleteById(id);
 	}

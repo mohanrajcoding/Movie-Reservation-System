@@ -38,7 +38,7 @@ public class UserMovieController {
 	}
 	
 	@GetMapping("/theatre/{id}")
-	public ResponseEntity<Theatre> getTheatreById(@PathVariable Integer id){
+	public ResponseEntity<Theatre> getTheatreById(@PathVariable Long id){
 		return ResponseEntity.ok(theatreService.getTheatreById(id));
 	}
 	

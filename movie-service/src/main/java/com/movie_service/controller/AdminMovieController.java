@@ -41,7 +41,7 @@ public class AdminMovieController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/delete-movie/{id}")
-	public ResponseEntity<?> deleteMovie(@PathVariable Integer id){
+	public ResponseEntity<?> deleteMovie(@PathVariable Long id){
 		movieSerive.deleteMovie(id);
 		return ResponseEntity.ok(Collections.singletonMap("message", "Movie details deleted successfully"));
 	}

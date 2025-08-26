@@ -1,0 +1,35 @@
+package com.booking_service.entity;
+
+import java.time.Instant;
+import java.util.List;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "bookings")
+public class Booking {
+	
+	@Id
+	private String id;
+	private Long showtimeId;
+	private String userId;
+
+    @ElementCollection
+    @CollectionTable(name = "booking_seats", joinColumns = @JoinColumn(name = "booking_id"))
+    @Column(name = "seat_id")
+    private List<String> seatIds;
+
+    private Instant createdAt;
+    private String paymentRef;
+    private String status;
+}

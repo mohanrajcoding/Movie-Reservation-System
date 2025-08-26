@@ -48,7 +48,7 @@ public class TheatreServiceImpl implements TheatreService{
 
 	@Override
 	@Cacheable(key = "theatre", value = "byid")
-	public Theatre getTheatreById(Integer id) {
+	public Theatre getTheatreById(Long id) {
 		// TODO Auto-generated method stub
 		return theatreRepository.findById(id).orElseThrow(()-> new TheatreServiceException("Theatre not available for given Id..!"));
 	}

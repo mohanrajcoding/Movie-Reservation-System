@@ -30,6 +30,7 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 	    String path = exchange.getRequest().getURI().getPath();
+	    System.out.println("Inside gateway");
 	    
 	    boolean isPublic = PUBLIC_PATHS.stream().anyMatch(path::startsWith);
 
@@ -48,6 +49,8 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 	        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
 	        return exchange.getResponse().setComplete();
 	    }
+	    
+	    System.out.println("if valid");
 
 	    return chain.filter(exchange);
 	}

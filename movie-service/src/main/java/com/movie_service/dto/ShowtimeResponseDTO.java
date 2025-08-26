@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ShowtimeResponseDTO {
 	
-	private Integer Id;
+	private Long Id;
 	private List<Movie> movie;
 	private List<Theatre> theatre;
 	private LocalDateTime startTime;

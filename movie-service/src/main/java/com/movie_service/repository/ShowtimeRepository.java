@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface ShowtimeRepository extends JpaRepository<Showtime, Integer>{
+public interface ShowtimeRepository extends JpaRepository<Showtime, Long>{
 
 	List<Showtime> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
 	List<Showtime> findByStartTimeAfter(LocalDateTime start);
-	List<Showtime> findByMovie_Id(Integer movieId);
-	boolean existsByMovie_IdAndStartTime(Integer movieId, LocalDateTime startstartTime);
-	boolean existsById(Integer movieId);
+	List<Showtime> findByMovie_Id(Long movieId);
+	boolean existsByMovie_IdAndStartTime(Long movieId, LocalDateTime startstartTime);
+	boolean existsById(Long movieId);
 }
