@@ -26,8 +26,6 @@ public class Seat {
     private Long id;
 
     private String seatNumber; // A1, A2, B5
-
-    private boolean available = true;
     
     @Enumerated(EnumType.STRING)
     private SeatStatus status = SeatStatus.AVAILABLE;

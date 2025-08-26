@@ -7,20 +7,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/showtimes")
+@RequestMapping("/api/movies/seats")
 @RequiredArgsConstructor
 public class SeatController {
 
     private final SeatService seatService;
 
-    @GetMapping("/{id}/seats/availability")
-    public ResponseEntity<List<Seat>> checkAvailability(
-            @PathVariable("id") Long showtimeId,
+    @GetMapping("/{showtimeId}/availability")
+    public ResponseEntity<Map<String, Boolean>> checkAvailability(
+            @PathVariable Long showtimeId,
             @RequestParam List<String> seatIds) {
 
-        List<Seat> seats = seatService.checkSeatAvailability(showtimeId, seatIds);
-        return ResponseEntity.ok(seats);
+    	Map<String, Boolean> availability = seatService.checkSeatsAvailability(showtimeId, seatIds);
+        return ResponseEntity.ok(availability);
+//        return ResponseEntity.ok(seats);
     }
+    
+    @PostMapping("/{showtimeId}/mark-booked")
+	public ResponseEntity<Void> markSeatsBooked(
+	        @PathVariable Long showtimeId,
+	        @RequestBody List<String> seatIds
+	) {
+    	seatService.markSeatsAsBooked(showtimeId, seatIds);
+	    return ResponseEntity.ok().build();
+	}
 }

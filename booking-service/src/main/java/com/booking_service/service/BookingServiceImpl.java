@@ -43,7 +43,8 @@ public class BookingServiceImpl implements BookingService{
         }
 
         Long showtimeId = ((Number) hold.get("showtimeId")).longValue();
-        List<String> seatIds = (List<String>) hold.get("seatIds");
+        @SuppressWarnings("unchecked")
+		List<String> seatIds = (List<String>) hold.get("seatIds");
 
         // persist booking first (idempotency is a later enhancement)
         String bookingId = idGenerator.newId("BOOK");

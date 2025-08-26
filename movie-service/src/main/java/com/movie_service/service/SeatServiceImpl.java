@@ -1,11 +1,17 @@
 package com.movie_service.service;
 
 import com.movie_service.entity.Seat;
+import com.movie_service.entity.SeatStatus;
+import com.movie_service.entity.Showtime;
 import com.movie_service.repository.SeatRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -13,19 +19,38 @@ public class SeatServiceImpl implements SeatService {
 
     private final SeatRepository seatRepository;
 
-    public List<Seat> checkSeatAvailability(Long showtimeId, List<String> seatNumbers) {
-        return seatRepository.findByShowtimeIdAndSeatNumberIn(showtimeId, seatNumbers);
-    }
+    @Override
+	public Map<String, Boolean> checkSeatsAvailability(Long showtimeId, List<String> seatNumbers) {
+		// TODO Auto-generated method stub
+		List<Seat> seats = seatRepository.findByShowtimeIdAndSeatNumberIn(showtimeId,seatNumbers);
+		
+		    Map<String, Boolean> availability = new HashMap<>();
+		    for (String seatId : seatNumbers) {
+//		        Seat seat = showtime.getSeats().stream()
+//		                .filter(s -> s.getSeatNumber().equals(seatId))
+//		                .findFirst()
+//		                .orElseThrow(() -> new RuntimeException("Seat not found: " + seatId));
+		        //availability.put(seatId, seat.isAvailable());
+		    	Seat seat = seats.stream()
+		    			.filter(s->s.getSeatNumber().equals(seatId))
+		    			.findFirst()
+		    			.orElseThrow(()->new RuntimeException("Seat not found: " + seatId));
+		        availability.put(seatId, seat.getStatus()==SeatStatus.AVAILABLE);
+		    }
+		    return availability;
+	}
 
-    public void bookSeats(Long showtimeId, List<String> seatNumbers) {
-        List<Seat> seats = seatRepository.findByShowtimeIdAndSeatNumberIn(showtimeId, seatNumbers);
+	@Transactional
+	public void markSeatsAsBooked(Long showtimeId, List<String> seatIds) {
+		List<Seat> seats = seatRepository.findByShowtimeIdAndSeatNumberIn(showtimeId, seatIds);
 
         for (Seat seat : seats) {
-            if (!seat.isAvailable()) {
-                throw new RuntimeException("Seat " + seat.getSeatNumber() + " is already booked");
+            if (seat.getStatus() == SeatStatus.BOOKED) {
+                throw new IllegalStateException("Seat already booked: " + seat.getSeatNumber());
             }
-            seat.setAvailable(false);
+            seat.setStatus(SeatStatus.BOOKED);
         }
+
         seatRepository.saveAll(seats);
-    }
+	}
 }

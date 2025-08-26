@@ -63,7 +63,7 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 	                String seatNumber = (char)('A' + row - 1) + String.valueOf(col); // A1..A10, B1..B10
 	                Seat seat = new Seat();
 	                seat.setSeatNumber(seatNumber);
-	                seat.setAvailable(true);
+	                seat.setStatus(SeatStatus.AVAILABLE);
 	                seat.setShowtime(showtime);
 	                showtime.getSeats().add(seat);
 	            }
@@ -180,8 +180,8 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 		                .filter(s -> s.getSeatNumber().equals(seatId))
 		                .findFirst()
 		                .orElseThrow(() -> new RuntimeException("Seat not found: " + seatId));
-		        availability.put(seatId, seat.isAvailable());
-		        seat.setStatus(SeatStatus.HELD);
+		        //availability.put(seatId, seat.isAvailable());
+		        availability.put(seatId, seat.getStatus()==SeatStatus.AVAILABLE);
 		    }
 		    return availability;
 	}

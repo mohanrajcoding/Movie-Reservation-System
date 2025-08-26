@@ -44,7 +44,7 @@ public class ShowtimeController {
 		return ResponseEntity.ok(showtimeService.getShowtimesFromNow());
 	}
 	
-	@GetMapping("/{id}/seats/availability")
+	/*** @GetMapping("/{id}/seats/availability")
 	public ResponseEntity<Map<String, Boolean>> checkSeatAvailability(
 	            @PathVariable Long id,
 	            @RequestParam List<String> seatIds) {
@@ -60,7 +60,7 @@ public class ShowtimeController {
 	) {
 		showtimeService.markSeatsAsBooked(showtimeId, seatIds);
 	    return ResponseEntity.ok().build();
-	}
+	} ***/
 	
 
 }

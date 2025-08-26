@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import org.redisson.api.RBucket;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,10 @@ import com.booking_service.client.MovieClient;
 import com.booking_service.dto.CreateHoldRequestDTO;
 import com.booking_service.dto.CreateHoldResponseDTO;
 
-import lombok.RequiredArgsConstructor;
 @Service
 public class SeatHoldServiceImpl implements SeatHoldService{
 	
+	@Autowired
 	private final MovieClient movieClient;
 	private final SeatLockService seatLockService;
 	private final RedissonClient redissonClient;
