@@ -9,8 +9,10 @@ import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 import com.booking_service.client.MovieClient;
+import com.booking_service.client.PaymentClient;
 import com.booking_service.dto.BookingResponseDTO;
 import com.booking_service.dto.ConfirmBookingRequestDTO;
+import com.booking_service.dto.PaymentDTO;
 import com.booking_service.entity.Booking;
 import com.booking_service.repository.BookingRepository;
 
@@ -25,6 +27,7 @@ public class BookingServiceImpl implements BookingService{
 	private final BookingRepository bookingRepository;
 	private final MovieClient movieClient;
     private final IdGenerator idGenerator;
+    private final PaymentClient paymentClient;
 	@Override
 	public String holdKey(String holdId) {
 		// TODO Auto-generated method stub
@@ -33,7 +36,7 @@ public class BookingServiceImpl implements BookingService{
 	@Override
 	public BookingResponseDTO confirm(String userId, ConfirmBookingRequestDTO req) {
 		// TODO Auto-generated method stub
-		var bucket = redissonClient.<Map<String, Object>>getBucket(holdKey(req.holdId()));
+		var bucket = redissonClient.<Map<String, Object>>getBucket(holdKey(req.getHoldId()));
         Map<String, Object> hold = bucket.get();
         if (hold == null) throw new NoSuchElementException("Hold expired or not found");
 
@@ -45,11 +48,17 @@ public class BookingServiceImpl implements BookingService{
         Long showtimeId = ((Number) hold.get("showtimeId")).longValue();
         @SuppressWarnings("unchecked")
 		List<String> seatIds = (List<String>) hold.get("seatIds");
+        
+        PaymentDTO payment =  paymentClient.verifyPayment(req.getPaymentReference());
+        
+        if(!payment.getStatus().equalsIgnoreCase("SUCCESS")) {
+        	//logic needs to be added
+        }
 
         // persist booking first (idempotency is a later enhancement)
         String bookingId = idGenerator.newId("BOOK");
         Booking booking = new Booking(
-            bookingId, showtimeId, userId, seatIds, Instant.now(), req.paymentReference(), "CONFIRMED"
+            bookingId, showtimeId, userId, seatIds, Instant.now(), req.getPaymentReference(), "CONFIRMED"
         );
         bookingRepository.save(booking);
 
