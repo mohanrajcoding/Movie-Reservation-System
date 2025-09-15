@@ -55,15 +55,15 @@ public class SeatHoldServiceImpl implements SeatHoldService{
 	public CreateHoldResponseDTO createHold(String userId, CreateHoldRequestDTO req) {
 		// TODO Auto-generated method stub
 		System.out.println("ShowId: "+req.getShowtimeId());
-		Map<String, Boolean> availability = movieClient.seatAvailability(req.getShowtimeId(), req.getSeatIds());
-		List<String> unavailable = req.getSeatIds().stream().filter(s-> !availability.getOrDefault(s, false)).toList();
+		Map<String, Boolean> availability = movieClient.seatAvailability(req.getShowtimeId(), req.getSeats());
+		List<String> unavailable = req.getSeats().stream().filter(s-> !availability.getOrDefault(s, false)).toList();
 		if (!unavailable.isEmpty()) {
             throw new IllegalStateException("Seats not available: " + unavailable);
         }
 
         List<RLock> acquired = new ArrayList<>();
         try {
-            for (String seatId : req.getSeatIds()) {
+            for (String seatId : req.getSeats()) {
                 RLock lock = seatLockService.getLock(req.getShowtimeId(), seatId);
                 if (!seatLockService.tryLock(lock, holdTtlMinutes)) {
                     throw new IllegalStateException("Seat locked by another user: " + seatId);
@@ -75,7 +75,7 @@ public class SeatHoldServiceImpl implements SeatHoldService{
             Map<String, Object> holdData = new HashMap<>();
             holdData.put("showtimeId", req.getShowtimeId());
             holdData.put("userId", userId);
-            holdData.put("seatIds", req.getSeatIds());
+            holdData.put("seatIds", req.getSeats());
 
             RBucket<Map<String, Object>> bucket = redissonClient.getBucket(holdKey(holdId));
             bucket.set(holdData, 
@@ -87,7 +87,7 @@ public class SeatHoldServiceImpl implements SeatHoldService{
             System.out.println("Value: " + bucket.get());
 
             long expiresAt = Instant.now().plusSeconds(holdTtlMinutes * 60).toEpochMilli();
-            return new CreateHoldResponseDTO(holdId, req.getShowtimeId(), userId, req.getSeatIds(), expiresAt);
+            return new CreateHoldResponseDTO(holdId, req.getShowtimeId(), userId, req.getSeats(), expiresAt);
 
         } catch (RuntimeException e) {
             for (RLock lock : acquired) seatLockService.unlockQuietly(lock);

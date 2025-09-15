@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService{
         }
 
         String token = jwtProvider.generateToken(user.getEmail(), user.getRole());
-        return new AuthResponse(token, user.getRole().name());
+        return new AuthResponse(token, user.getRole().name(), request.getUsername(), user.getEmail());
     }
 
 	public void adminRegister(SignupRequest request) {

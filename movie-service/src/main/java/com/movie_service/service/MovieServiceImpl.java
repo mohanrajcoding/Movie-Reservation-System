@@ -16,68 +16,68 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MovieServiceImpl implements MovieService{
+public class MovieServiceImpl implements MovieService {
 
-	private final MovieRepository movieRepository;
-	private final ShowtimeRepository showtimeRepository;
-	
-	@Override
-	@CacheEvict(key = "movies", allEntries = true)
-	public Movie addMovie(Movie movie) {
-		// TODO Auto-generated method stub
-		if(movie.getTitle().isEmpty() || movie.getTitle()==null) {
-			throw new MovieServiceException("Please pass valide Title");
-		}
-		List<Movie> isExist = movieRepository.findByNormalizedTitle(movie.getTitle().trim().toLowerCase());
-		if(!isExist.isEmpty()) {
-			throw new MovieServiceException(movie.getTitle()+ " movie already exist");
-		}
-		String rawTitle = movie.getTitle();
-		movie.setNormalizedTitle(rawTitle.trim().toLowerCase());
-		return movieRepository.save(movie);
-	}
+    private final MovieRepository movieRepository;
+    private final ShowtimeRepository showtimeRepository;
 
-	@Override
-	@Cacheable(key = "movies", value = "all")
-	public List<Movie> getAllMovies() {
-		// TODO Auto-generated method stub
-		return movieRepository.findAll();
-	}
+    @Override
+    @CacheEvict(value = "movies", allEntries = true)
+    public Movie addMovie(Movie movie) {
+        if (movie.getTitle() == null || movie.getTitle().trim().isEmpty()) {
+            throw new MovieServiceException("Please pass valid Title");
+        }
 
-	@Override
-	@Cacheable(key = "movies", value = "bydate")
-	public List<Movie> getMoviesByDate(LocalDate date) {
-		// TODO Auto-generated method stub
-		List <Movie> movies = showtimeRepository.findAll().stream()
-		.filter(showtime->showtime.getStartTime().toLocalDate().isEqual(date))
-		.map(showtime -> showtime.getMovie())
-		.distinct().collect(Collectors.toList());
-		if(movies.isEmpty()) {
-			throw new MovieServiceException("Movies not available on: "+ date.toString());
-		}
-		return movies;
-	}
+        List<Movie> isExist = movieRepository.findByNormalizedTitle(movie.getTitle().trim().toLowerCase());
+        if (!isExist.isEmpty()) {
+            throw new MovieServiceException(movie.getTitle() + " movie already exists");
+        }
 
-	@Override
-	@CacheEvict(key = "movies", allEntries = true)
-	public Movie updateMovie(Movie movie) {
-		// TODO Auto-generated method stub
-		Movie existingmovie = movieRepository.findById(movie.getId()).orElseThrow(
-					()->new MovieServiceException ("Movie is not available for Updating"));
-		
-		existingmovie.setDescription(movie.getDescription());
-		existingmovie.setGenre(movie.getGenre());
-		existingmovie.setPosterUrl(movie.getPosterUrl());
-		existingmovie.setTitle(movie.getTitle());
-		return existingmovie;
-	}
-	
-	@Override
-	@CacheEvict(key = "movies", allEntries = true)
-	public void deleteMovie(Long id) {
-		movieRepository.findById(id).orElseThrow(()->new MovieServiceException("There is no Record for id: "+id));
-		movieRepository.deleteById(id);
-	}
-	
+        movie.setNormalizedTitle(movie.getTitle().trim().toLowerCase());
+        return movieRepository.save(movie);
+    }
 
+    @Override
+    @Cacheable(value = "movies", key = "'all'")
+    public List<Movie> getAllMovies() {
+        return movieRepository.findAll();
+    }
+
+    @Override
+    @Cacheable(value = "movies", key = "#date")
+    public List<Movie> getMoviesByDate(LocalDate date) {
+        List<Movie> movies = showtimeRepository.findAll().stream()
+                .filter(showtime -> showtime.getStartTime().toLocalDate().isEqual(date))
+                .map(showtime -> showtime.getMovie())
+                .distinct()
+                .collect(Collectors.toList());
+
+        if (movies.isEmpty()) {
+            throw new MovieServiceException("Movies not available on: " + date);
+        }
+
+        return movies;
+    }
+
+    @Override
+    @CacheEvict(value = "movies", allEntries = true)
+    public Movie updateMovie(Movie movie) {
+        Movie existingMovie = movieRepository.findById(movie.getId())
+                .orElseThrow(() -> new MovieServiceException("Movie not available for updating"));
+
+        existingMovie.setDescription(movie.getDescription());
+        existingMovie.setGenre(movie.getGenre());
+        existingMovie.setPosterUrl(movie.getPosterUrl());
+        existingMovie.setTitle(movie.getTitle());
+
+        return movieRepository.save(existingMovie); // 🔑 FIXED
+    }
+
+    @Override
+    @CacheEvict(value = "movies", allEntries = true)
+    public void deleteMovie(Long id) {
+        movieRepository.findById(id)
+                .orElseThrow(() -> new MovieServiceException("No record found for id: " + id));
+        movieRepository.deleteById(id);
+    }
 }

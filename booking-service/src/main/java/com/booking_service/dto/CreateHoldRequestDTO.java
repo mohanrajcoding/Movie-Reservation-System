@@ -17,5 +17,5 @@ public class CreateHoldRequestDTO {
 	private Long showtimeId;
 	
 	@NotEmpty(message = "seatIds cannot be empty")
-	private List<String> seatIds;
+	private List<String> seats;
 }

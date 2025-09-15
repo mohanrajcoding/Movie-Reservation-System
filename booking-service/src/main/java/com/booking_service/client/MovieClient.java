@@ -25,5 +25,9 @@ public interface MovieClient {
 	public void markSeatsBooked (@PathVariable Long showtimeId, 
 									@RequestBody List<String> seatIds);
 	
+	@GetMapping("/api/movies/showtimes/showdetails/{showtimeId}")
+	public ShowtimeDetailsDTO getShowtimesById(@PathVariable Long showtimeId);
+
+	
 	
 }

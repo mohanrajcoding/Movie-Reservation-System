@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.movie_service.dto.ShowtimeResponseDTO;
+import com.movie_service.entity.Showtime;
+import com.movie_service.dto.ShowtimeDetailsDTO;
 import com.movie_service.service.ShowtimeService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,13 +37,26 @@ public class ShowtimeController {
 		return ResponseEntity.ok(showtimeService.getShowtimesFromNow());
 	}
 	
-	@GetMapping("/{date}")
-	public ResponseEntity<List<ShowtimeResponseDTO>> getAllShowtimesBydate(@PathVariable 
-											@DateTimeFormat (iso= DateTimeFormat.ISO.DATE) LocalDate date){
-		if(date!=null) {
-			return ResponseEntity.ok(showtimeService.getShowtimesByDate(date));
-		}
-		return ResponseEntity.ok(showtimeService.getShowtimesFromNow());
+	/*
+	 * @GetMapping("/{date}") public ResponseEntity<List<ShowtimeResponseDTO>>
+	 * getAllShowtimesBydate(@PathVariable
+	 * 
+	 * @DateTimeFormat (iso= DateTimeFormat.ISO.DATE) LocalDate date){
+	 * if(date!=null) { return
+	 * ResponseEntity.ok(showtimeService.getShowtimesByDate(date)); } return
+	 * ResponseEntity.ok(showtimeService.getShowtimesFromNow()); }
+	 */
+	
+	@GetMapping("/{movieId}")
+	public ResponseEntity<List<ShowtimeResponseDTO>> getAllShowtimesByMovieId(@PathVariable Long movieId){
+		
+		return ResponseEntity.ok(showtimeService.getAllShowtimesByMovieId(movieId));
+	}
+	
+	@GetMapping("/showdetails/{showtimeId}")
+	public ShowtimeDetailsDTO getShowtimesById(@PathVariable Long showtimeId){
+		
+		return showtimeService.getShowtimesById(showtimeId);
 	}
 	
 	/*** @GetMapping("/{id}/seats/availability")

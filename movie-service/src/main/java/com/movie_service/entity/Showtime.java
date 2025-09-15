@@ -1,5 +1,7 @@
 package com.movie_service.entity;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,4 +54,5 @@ public class Showtime {
 	
 	@OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Seat> seats = new ArrayList<>();
+	private BigDecimal price;
 }

@@ -1,8 +1,9 @@
 package com.payment_service.service;
 
-import com.payment_service.model.Payment;
+import com.payment_service.dto.PaymentRequestDTO;
+import com.payment_service.dto.PaymentResponseDTO;
 
 public interface PaymentService {
-	Payment initiatePayment(String userId, double amount);
-    Payment verifyPayment(String paymentRef);
+	PaymentResponseDTO initiatePayment(String userId, PaymentRequestDTO req);
+    PaymentResponseDTO verifyPayment(String paymentRef);
 }

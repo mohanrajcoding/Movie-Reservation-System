@@ -15,7 +15,6 @@ import com.movie_service.entity.Theatre;
 import com.movie_service.service.MovieService;
 import com.movie_service.service.TheatreService;
 
-import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 
 @RestController

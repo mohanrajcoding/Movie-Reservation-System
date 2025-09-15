@@ -25,6 +25,7 @@ public class SeatHoldController {
     public ResponseEntity<CreateHoldResponseDTO> createHold(
             @RequestHeader("X-User-Id") String userId,
             @Valid @RequestBody CreateHoldRequestDTO req) {
+    	System.out.println("Inside booking controller");
     	if (req.getShowtimeId() == null) {
     	    throw new IllegalArgumentException("showtimeId cannot be null");
     	}

@@ -9,6 +9,7 @@ public class JwtAuthExtractor {
         if (userId == null || userId.isEmpty()) {
             throw new IllegalArgumentException("Missing userId in request headers");
         }
-        return new JwtUser(userId, email);
+        System.out.println("Email: "+email);
+        return new JwtUser(userId,email);
     }
 }

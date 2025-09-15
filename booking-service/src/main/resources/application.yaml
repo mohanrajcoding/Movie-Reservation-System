@@ -2,12 +2,22 @@ server:
   port: 8083
 
 spring: 
+  application: 
+      name: booking-service
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      group-id: booking-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+         key-serializer: org.apache.kafka.common.serialization.StringSerializer
+         value-serializer: org.apache.kafka.common.serialization.StringSerializer
   data:
     redis:
       host: localhost
       port: 6379
-  application:
-    name: booking-service
   datasource:
     url: jdbc:mysql://localhost:3306/booking_service_db
     username: root

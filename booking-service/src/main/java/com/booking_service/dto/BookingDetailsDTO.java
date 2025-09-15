@@ -2,21 +2,20 @@ package com.booking_service.dto;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingResponseDTO {
+public class BookingDetailsDTO{
 	private String bookingId;
 	private Long showtimeId;
 	private String userId;
-	private String email;
 	private List<String> seatIds;
 	private String status;
 	private BigDecimal amount;
@@ -27,3 +26,4 @@ public class BookingResponseDTO {
 	private Instant showStartTime;
 	private String moviePosterUrl;
 }
+	    

@@ -1,5 +1,6 @@
 package com.movie_service.controller;
 
+import com.movie_service.dto.SeatsResponseDTO;
 import com.movie_service.entity.Seat;
 import com.movie_service.service.SeatService;
 import lombok.RequiredArgsConstructor;
@@ -34,4 +35,9 @@ public class SeatController {
     	seatService.markSeatsAsBooked(showtimeId, seatIds);
 	    return ResponseEntity.ok().build();
 	}
+    
+    @GetMapping("/{showtimeId}")
+    public SeatsResponseDTO getSeats(@PathVariable Long showtimeId) {
+        return seatService.seatsForShowtimeId(showtimeId);
+    }
 }

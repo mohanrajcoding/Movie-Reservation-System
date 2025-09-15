@@ -7,6 +7,7 @@ import java.util.Map;
 import com.movie_service.dto.ShowtimeRequestDTO;
 import com.movie_service.dto.ShowtimeResponseDTO;
 import com.movie_service.entity.Showtime;
+import com.movie_service.dto.ShowtimeDetailsDTO;
 
 public interface ShowtimeService {
 	void addShowtime(ShowtimeRequestDTO showtime);
@@ -16,6 +17,7 @@ public interface ShowtimeService {
 	void deleteshowtime(Long id);
 	void updateShowtime(Long id, ShowtimeRequestDTO showtimeRequestDTO);
 	Map<String, Boolean> checkSeatsAvailability(Long showtimeId, List<String> seatIds);
-	void markSeatsAsBooked(Long showtimeId, List<String> seatIds);
+	List<ShowtimeResponseDTO> getAllShowtimesByMovieId(Long movieId);
+	ShowtimeDetailsDTO getShowtimesById(Long showtimeId);
 	
 }

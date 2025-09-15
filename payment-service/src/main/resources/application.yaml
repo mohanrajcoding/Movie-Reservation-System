@@ -9,6 +9,10 @@ eureka:
       fetch-registry: true
 server : 
     port : 8084
+    
+booking:
+  service:
+    base-url: http://localhost:8080
 
 #redis:
 #      url: redis://127.0.0.1:6379 

@@ -1,24 +1,20 @@
 package com.movie_service.dto;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ShowtimeRequestDTO {
-	
-	private Long id;
+@AllArgsConstructor
+public class ShowtimeDetailsDTO {
+
+	private Long  id;
 	private LocalDateTime startTime;
-	private Integer totalSeats;
-	private Integer availableSeats;
-	private Long movieId;
-	private Long theatreId;	
+	private String movieName;
+	private String moviePosterUrl;
+	private String theatreName;
 	private String screenName;
-	private BigDecimal price;
-	
 }

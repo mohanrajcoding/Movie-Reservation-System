@@ -19,10 +19,9 @@ public class UserHeaderFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String userId = request.getHeader("X-User-Id");
         String email = request.getHeader("X-User-Email");
-
+        System.out.println("Inside UserHeaderFilter");
         if (userId != null) {
-            JwtUser user = new JwtUser(userId, email);
-
+            JwtUser user = new JwtUser(userId,email);
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
 

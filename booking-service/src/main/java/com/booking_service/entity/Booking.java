@@ -1,6 +1,8 @@
 package com.booking_service.entity;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CollectionTable;
@@ -23,13 +25,20 @@ public class Booking {
 	private String id;
 	private Long showtimeId;
 	private String userId;
+	private String email;
 
     @ElementCollection
     @CollectionTable(name = "booking_seats", joinColumns = @JoinColumn(name = "booking_id"))
     @Column(name = "seat_id")
     private List<String> seatIds;
-
     private Instant createdAt;
     private String paymentRef;
     private String status;
+    private BigDecimal amount;
+    private LocalDateTime showtime;
+    private String movieName;
+    private String moviePosterUrl;
+    private String theaterName;
+    private String screenName;
+    
 }

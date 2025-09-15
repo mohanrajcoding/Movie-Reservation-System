@@ -17,15 +17,14 @@ import com.movie_service.entity.Movie;
 import com.movie_service.entity.Seat;
 import com.movie_service.entity.SeatStatus;
 import com.movie_service.entity.Showtime;
+import com.movie_service.dto.ShowtimeDetailsDTO;
 import com.movie_service.entity.Theatre;
 import com.movie_service.exception.MovieServiceException;
 import com.movie_service.exception.ShowtimeServiceException;
 import com.movie_service.repository.MovieRepository;
-import com.movie_service.repository.SeatRepository;
 import com.movie_service.repository.ShowtimeRepository;
 import com.movie_service.repository.TheatreRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -35,8 +34,6 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 	private final ShowtimeRepository showtimeRepository;
 	private final MovieRepository movieRepository;
 	private final TheatreRepository theatreRepository;
-	private final SeatRepository seatRepository;
-
 	@Override
 	@CacheEvict(value = "showtimes", allEntries = true)
 	public void addShowtime(ShowtimeRequestDTO showtimeDto) {
@@ -58,6 +55,7 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 		showtime.setScreenName(showtimeDto.getScreenName());
 		showtime.setTotalSeats(showtimeDto.getTotalSeats());
 		showtime.setStartTime(showtimeDto.getStartTime());
+		showtime.setPrice(showtimeDto.getPrice());
 		 for (int row = 1; row <= 5; row++) {
 	            for (int col = 1; col <= 10; col++) {
 	                String seatNumber = (char)('A' + row - 1) + String.valueOf(col); // A1..A10, B1..B10
@@ -82,9 +80,10 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 			ShowtimeResponseDTO dto = new ShowtimeResponseDTO();
 			dto.setId(showtime.getId());
 			dto.setAvailableSeats(showtime.getAvailableSeats());
-			dto.setMovie(List.of(showtime.getMovie()));
+			dto.setMovieName(showtime.getMovie().getTitle());
 			dto.setStartTime(showtime.getStartTime());
-			dto.setTheatre(List.of(showtime.getTheatre()));
+			dto.setTheatreName(showtime.getTheatre().getName());
+			dto.setLocation(showtime.getTheatre().getLocation());
 			dto.setTotalSeats(showtime.getTotalSeats());
 			dto.setScreenName(showtime.getScreenName());
 			return dto;
@@ -119,9 +118,10 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 			ShowtimeResponseDTO dto = new ShowtimeResponseDTO();
 			dto.setAvailableSeats(showtime.getAvailableSeats());
 			dto.setId(showtime.getId());
-			dto.setMovie(List.of(showtime.getMovie()));
+			dto.setMovieName(showtime.getMovie().getTitle());
 			dto.setStartTime(showtime.getStartTime());
-			dto.setTheatre(List.of(showtime.getTheatre()));
+			dto.setTheatreName(showtime.getTheatre().getName());
+			dto.setLocation(showtime.getTheatre().getLocation());
 			dto.setTotalSeats(showtime.getTotalSeats());
 			dto.setScreenName(showtime.getScreenName());
 			return dto;
@@ -185,17 +185,41 @@ public class ShowtimeServiceImpl implements ShowtimeService{
 		    }
 		    return availability;
 	}
-	@Transactional
-	public void markSeatsAsBooked(Long showtimeId, List<String> seatIds) {
-		List<Seat> seats = seatRepository.findByShowtimeIdAndSeatNumberIn(showtimeId, seatIds);
 
-        for (Seat seat : seats) {
-            if (seat.getStatus() == SeatStatus.BOOKED) {
-                throw new IllegalStateException("Seat already booked: " + seat.getSeatNumber());
-            }
-            seat.setStatus(SeatStatus.BOOKED);
-        }
+	@Override
+	public List<ShowtimeResponseDTO> getAllShowtimesByMovieId(Long movieId) {
+		// TODO Auto-generated method stub
+		List<Showtime> showtimes = showtimeRepository.findByMovie_Id(movieId);
+		System.out.println(showtimes.size());
+		List<ShowtimeResponseDTO> showtimeDto = showtimes.stream().filter(showtime->showtime.getStartTime().isAfter(LocalDateTime.now())).map(showtime->{
+			ShowtimeResponseDTO dto = new ShowtimeResponseDTO();
+			dto.setAvailableSeats(showtime.getAvailableSeats());
+			dto.setId(showtime.getId());
+			dto.setMovieName(showtime.getMovie().getTitle());
+			dto.setStartTime(showtime.getStartTime());
+			dto.setTheatreName(showtime.getTheatre().getName());
+			dto.setLocation(showtime.getTheatre().getLocation());
+			dto.setTotalSeats(showtime.getTotalSeats());
+			dto.setScreenName(showtime.getScreenName());
+			dto.setPrice(showtime.getPrice());
+			return dto;
+		}).collect(Collectors.toList());
+		return showtimeDto;
+	}
 
-        seatRepository.saveAll(seats);
+	@Override
+	public ShowtimeDetailsDTO getShowtimesById(Long showtimeId) {
+		// TODO Auto-generated method stub
+		Showtime show = showtimeRepository.findById(showtimeId).orElseThrow(()->new ShowtimeServiceException("Please enter valid showtimeId"));
+		ShowtimeDetailsDTO detailsDTO = new ShowtimeDetailsDTO();
+		detailsDTO.setId(showtimeId);
+		detailsDTO.setMovieName(show.getMovie().getTitle());
+		//System.out.println("detailsDTO movie name: "+detailsDTO.getMovieName()+ show.getMovie().getTitle() );
+		detailsDTO.setScreenName(show.getScreenName());
+		detailsDTO.setStartTime(show.getStartTime());
+		detailsDTO.setTheatreName(show.getTheatre().getName());
+		//System.out.println("detailsDTO theatre name: "+detailsDTO.getTheatreName() );
+		detailsDTO.setMoviePosterUrl(show.getMovie().getPosterUrl());
+		return detailsDTO;
 	}
 }
