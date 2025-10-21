@@ -1,5 +1,7 @@
 package com.auth_service.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +23,10 @@ public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     public void register(SignupRequest request) {
+    	logger.info("AuthServiceImpl :: register");
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new AuthServiceException("Email already exists");
         }
@@ -36,9 +40,11 @@ public class AuthServiceImpl implements AuthService{
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
         userRepository.save(user);
+        logger.info("AuthServiceImpl :: register-save");
     }
 
     public AuthResponse login(AuthRequest request) {
+    	logger.info("AuthServiceImpl :: login");
     	User user=null;
     	if(request.getEmail()==null) {
     		user  = userRepository.findByUsername(request.getUsername()).orElseThrow(()-> new AuthServiceException("Invalid credentials"));
@@ -52,6 +58,7 @@ public class AuthServiceImpl implements AuthService{
         }
 
         String token = jwtProvider.generateToken(user.getEmail(), user.getRole());
+        logger.info("AuthServiceImpl :: login-done");
         return new AuthResponse(token, user.getRole().name(), request.getUsername(), user.getEmail());
     }
 

@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: notification-service
+  kafka:
+    bootstrap-servers: localhost:29092  # internal Docker hostname
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: mohanraj27798@gmail.com
+    password: xfim kfen bxts xuim
+    protocol: smtp
+    tls: true
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+server:
+  port: 8086
